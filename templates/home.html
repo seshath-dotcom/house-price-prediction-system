@@ -1,176 +1,817 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
 
-{% block content %}
+<html>
 
-<!-- HERO SECTION -->
-<div class="p-5 mb-5 bg-light rounded-4 shadow">
+<head>
 
-    <div class="container-fluid py-5">
+    <title>House Price Prediction System</title>
 
-        <h1 class="display-4 fw-bold text-success">
-            AI Based House Price Prediction System
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            overflow-x:hidden;
+            background:#0f172a;
+            color:white;
+        }
+
+        /* VIDEO BACKGROUND */
+
+        .video-bg{
+
+            position:fixed;
+
+            top:0;
+            left:0;
+
+            width:100%;
+            height:100%;
+
+            object-fit:cover;
+
+            z-index:-2;
+        }
+
+        /* OVERLAY */
+
+        .overlay{
+
+            position:fixed;
+
+            width:100%;
+            height:100%;
+
+            background:rgba(0,0,0,0.55);
+
+            z-index:-1;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+
+            width:100%;
+
+            padding:20px 60px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            position:fixed;
+
+            top:0;
+
+            z-index:1000;
+
+            background:rgba(255,255,255,0.05);
+
+            backdrop-filter:blur(10px);
+        }
+
+        .logo{
+
+            font-size:30px;
+
+            font-weight:bold;
+
+            color:white;
+        }
+
+        .nav-links{
+
+            display:flex;
+
+            gap:30px;
+        }
+
+        .nav-links a{
+
+            text-decoration:none;
+
+            color:white;
+
+            font-size:18px;
+
+            transition:0.3s;
+        }
+
+        .nav-links a:hover{
+
+            color:#38bdf8;
+        }
+
+        /* PROFILE */
+
+        .profile{
+
+            position:relative;
+        }
+
+        .profile-btn{
+
+            width:45px;
+            height:45px;
+
+            border-radius:50%;
+
+            background:white;
+
+            color:black;
+
+            display:flex;
+
+            justify-content:center;
+            align-items:center;
+
+            cursor:pointer;
+
+            font-size:20px;
+        }
+
+        .dropdown{
+
+            position:absolute;
+
+            top:60px;
+            right:0;
+
+            width:230px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(12px);
+
+            border-radius:15px;
+
+            display:none;
+
+            overflow:hidden;
+        }
+
+        .dropdown a{
+
+            display:block;
+
+            padding:15px;
+
+            color:white;
+
+            text-decoration:none;
+
+            transition:0.3s;
+        }
+
+        .dropdown a:hover{
+
+            background:rgba(255,255,255,0.15);
+        }
+
+        .profile:hover .dropdown{
+
+            display:block;
+        }
+
+        /* HERO */
+
+        .hero{
+
+            height:100vh;
+
+            display:flex;
+
+            flex-direction:column;
+
+            justify-content:center;
+
+            align-items:center;
+
+            text-align:center;
+
+            padding:20px;
+        }
+
+        .hero h1{
+
+            font-size:75px;
+
+            margin-bottom:20px;
+
+            text-shadow:0 0 20px rgba(255,255,255,0.3);
+
+            animation:float 4s ease-in-out infinite;
+        }
+
+        @keyframes float{
+
+            0%{
+                transform:translateY(0);
+            }
+
+            50%{
+                transform:translateY(-15px);
+            }
+
+            100%{
+                transform:translateY(0);
+            }
+        }
+
+        .hero p{
+
+            font-size:24px;
+
+            max-width:850px;
+
+            margin-bottom:40px;
+
+            color:#ddd;
+        }
+
+        /* SEARCH BOX */
+
+        .search-box{
+
+            width:90%;
+            max-width:1000px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(15px);
+
+            padding:25px;
+
+            border-radius:20px;
+
+            display:flex;
+
+            gap:20px;
+
+            flex-wrap:wrap;
+
+            justify-content:center;
+        }
+
+        .search-box input{
+
+            flex:1;
+
+            min-width:220px;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:rgba(255,255,255,0.15);
+
+            color:white;
+
+            font-size:16px;
+
+            outline:none;
+        }
+
+        .search-box input::placeholder{
+
+            color:#ddd;
+        }
+
+        .search-box button{
+
+            padding:15px 35px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:white;
+
+            color:black;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .search-box button:hover{
+
+            transform:scale(1.05);
+        }
+
+        /* FEATURED SECTION */
+
+        .section{
+
+            padding:100px 60px;
+        }
+
+        .section-title{
+
+            font-size:45px;
+
+            margin-bottom:50px;
+
+            text-align:center;
+        }
+
+        .cards{
+
+            display:grid;
+
+            grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+
+            gap:30px;
+        }
+
+        .card{
+
+            background:rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(15px);
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            transition:0.4s;
+        }
+
+        .card:hover{
+
+            transform:translateY(-10px);
+
+            box-shadow:0 0 25px rgba(255,255,255,0.2);
+        }
+
+        .card img{
+
+            width:100%;
+
+            height:250px;
+
+            object-fit:cover;
+        }
+
+        .card-content{
+
+            padding:20px;
+        }
+
+        .card-content h2{
+
+            margin-bottom:10px;
+        }
+
+        .card-content p{
+
+            color:#ddd;
+
+            margin-bottom:15px;
+        }
+
+        .card-content button{
+
+            padding:12px 25px;
+
+            border:none;
+
+            border-radius:10px;
+
+            background:white;
+
+            color:black;
+
+            cursor:pointer;
+
+            font-weight:bold;
+        }
+
+        /* AI SECTION */
+
+        .ai-section{
+
+            text-align:center;
+
+            padding:120px 20px;
+
+            background:rgba(255,255,255,0.05);
+        }
+
+        .ai-section h1{
+
+            font-size:55px;
+
+            margin-bottom:20px;
+        }
+
+        .ai-section p{
+
+            font-size:22px;
+
+            color:#ddd;
+
+            margin-bottom:30px;
+        }
+
+        .ai-section a{
+
+            text-decoration:none;
+        }
+
+        .ai-section button{
+
+            padding:18px 40px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:white;
+
+            color:black;
+
+            font-size:20px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+        }
+
+        /* FOOTER */
+
+        footer{
+
+            padding:40px;
+
+            text-align:center;
+
+            background:black;
+        }
+
+        footer p{
+
+            color:#aaa;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px){
+
+            .navbar{
+
+                padding:20px;
+            }
+
+            .hero h1{
+
+                font-size:45px;
+            }
+
+            .hero p{
+
+                font-size:18px;
+            }
+
+            .section{
+
+                padding:80px 20px;
+            }
+
+            .section-title{
+
+                font-size:35px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- VIDEO -->
+
+    <video autoplay muted loop playsinline class="video-bg">
+
+        <source
+            src="{{ url_for('static', filename='videos/house.mp4') }}"
+            type="video/mp4"
+        >
+
+    </video>
+
+    <div class="overlay"></div>
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+
+            SMART PROP AI
+
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/properties">Properties</a>
+
+            <a href="/predict">AI Predict</a>
+
+            <a href="/analytics">Analytics</a>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <div class="profile">
+
+            <div class="profile-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+            <div class="dropdown">
+
+                <a href="/login">
+
+                    Login
+
+                </a>
+
+                <a href="/signup">
+
+                    Signup
+
+                </a>
+
+                <a href="/dashboard">
+
+                    Dashboard
+
+                </a>
+
+                <a href="/my-favorites">
+
+                    Favorites
+
+                </a>
+
+                <a href="/message-center">
+
+                    Message Center
+
+                </a>
+
+                <a href="/notifications">
+
+                    Notifications
+
+                </a>
+
+                <a href="/logout">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <h1>
+
+            Find Your Dream Home
+
         </h1>
 
-        <p class="col-md-8 fs-5 mt-4">
+        <p>
 
-            Buy and sell properties with transparent pricing using
-            Machine Learning based house price prediction.
-
-            Avoid unnecessary brokerage and discover fair property prices.
+            AI Powered Real Estate Platform for Buying and Selling
+            Houses and Lands Without Brokerage Fees
 
         </p>
 
-        <a href="/properties" class="btn btn-success btn-lg mt-3">
+        <form
+            action="/properties"
+            method="GET"
+            class="search-box"
+        >
 
-            Explore Properties
+            <input
+                type="text"
+                name="location"
+                placeholder="Enter Location"
+            >
+
+            <input
+                type="number"
+                name="budget"
+                placeholder="Enter Budget"
+            >
+
+            <button type="submit">
+
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- FEATURED -->
+
+    <section class="section">
+
+        <h1 class="section-title">
+
+            Featured Properties
+
+        </h1>
+
+        <div class="cards">
+
+            <!-- CARD 1 -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1568605114967-8130f3a36994"
+                >
+
+                <div class="card-content">
+
+                    <h2>
+
+                        Luxury Villa
+
+                    </h2>
+
+                    <p>
+
+                        Premium luxury villa with AI predicted fair pricing.
+
+                    </p>
+
+                    <button>
+
+                        View Property
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- CARD 2 -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"
+                >
+
+                <div class="card-content">
+
+                    <h2>
+
+                        Modern Apartment
+
+                    </h2>
+
+                    <p>
+
+                        Smart apartment with verified ownership details.
+
+                    </p>
+
+                    <button>
+
+                        View Property
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- CARD 3 -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1494526585095-c41746248156"
+                >
+
+                <div class="card-content">
+
+                    <h2>
+
+                        Residential Land
+
+                    </h2>
+
+                    <p>
+
+                        Explore lands with accurate AI market predictions.
+
+                    </p>
+
+                    <button>
+
+                        View Property
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- AI SECTION -->
+
+    <section class="ai-section">
+
+        <h1>
+
+            AI House Price Prediction
+
+        </h1>
+
+        <p>
+
+            Predict accurate property prices using Machine Learning
+
+        </p>
+
+        <a href="/predict">
+
+            <button>
+
+                Try AI Prediction
+
+            </button>
 
         </a>
 
-        <a href="/predict" class="btn btn-dark btn-lg mt-3 ms-2">
+    </section>
 
-            Predict Price
+    <!-- FOOTER -->
 
-        </a>
+    <footer>
 
-    </div>
+        <h2>
 
-</div>
+            SMART PROP AI
 
-<!-- FEATURES SECTION -->
-<div class="row text-center">
+        </h2>
 
-    <div class="col-md-4 mb-4">
+        <br>
 
-        <div class="card shadow h-100 p-4">
+        <p>
 
-            <h2 class="text-success">
-                🤖 AI Prediction
-            </h2>
+            © 2026 All Rights Reserved
 
-            <p class="mt-3">
+        </p>
 
-                Predict accurate house prices using
-                Machine Learning algorithms trained on real datasets.
+    </footer>
 
-            </p>
+</body>
 
-        </div>
-
-    </div>
-
-    <div class="col-md-4 mb-4">
-
-        <div class="card shadow h-100 p-4">
-
-            <h2 class="text-success">
-                🏠 Property Listings
-            </h2>
-
-            <p class="mt-3">
-
-                Browse properties with images,
-                pricing, location, and owner information.
-
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4 mb-4">
-
-        <div class="card shadow h-100 p-4">
-
-            <h2 class="text-success">
-                🔍 Smart Search
-            </h2>
-
-            <p class="mt-3">
-
-                Search properties based on
-                budget and preferred locations instantly.
-
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ABOUT SECTION -->
-<div class="card shadow p-5 mt-5">
-
-    <h2 class="text-success mb-4">
-        About The Project
-    </h2>
-
-    <p style="font-size:18px; line-height:1.8;">
-
-        This web application helps users buy and sell houses
-        directly without relying heavily on brokers.
-
-        The system uses Artificial Intelligence and Linear Regression
-        algorithms to estimate fair market prices based on property features.
-
-        Users can also compare negotiation ranges and make
-        transparent property decisions.
-
-    </p>
-
-</div>
-
-<!-- STATS SECTION -->
-<div class="row mt-5 text-center">
-
-    <div class="col-md-4">
-
-        <div class="card shadow p-4">
-
-            <h1 class="text-success">
-                100+
-            </h1>
-
-            <h5>
-                Properties Listed
-            </h5>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <div class="card shadow p-4">
-
-            <h1 class="text-success">
-                AI
-            </h1>
-
-            <h5>
-                Powered Predictions
-            </h5>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <div class="card shadow p-4">
-
-            <h1 class="text-success">
-                24/7
-            </h1>
-
-            <h5>
-                Property Access
-            </h5>
-
-        </div>
-
-    </div>
-
-</div>
-
-{% endblock %}
+</html>

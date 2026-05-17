@@ -1,73 +1,261 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
 
-{% block content %}
+<html>
 
-<div class="row justify-content-center">
+<head>
 
-    <div class="col-md-5">
+    <title>Login</title>
 
-        <div class="card shadow p-5">
+    <meta charset="UTF-8">
 
-            <h2 class="text-center text-success mb-4">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                Login Account
+    <style>
 
-            </h2>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
 
-            <form method="POST">
+        body{
+            overflow:hidden;
+        }
 
-                <div class="mb-3">
+        /* VIDEO BACKGROUND */
 
-                    <label class="form-label">
-                        Email Address
-                    </label>
+        .video-bg{
 
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        required
-                    >
+            position:fixed;
 
-                </div>
+            right:0;
+            bottom:0;
 
-                <div class="mb-3">
+            min-width:100%;
+            min-height:100%;
 
-                    <label class="form-label">
-                        Password
-                    </label>
+            object-fit:cover;
 
-                    <input
-                        type="password"
-                        name="password"
-                        class="form-control"
-                        required
-                    >
+            z-index:-2;
+        }
 
-                </div>
+        /* DARK OVERLAY */
 
-                <button class="btn btn-success w-100">
+        .overlay{
 
-                    Login
+            position:fixed;
 
-                </button>
+            width:100%;
+            height:100%;
 
-            </form>
+            background:rgba(0,0,0,0.45);
 
-            <p class="mt-4 text-center">
+            z-index:-1;
+        }
 
-                Don't have an account?
+        /* CENTER BOX */
 
-                <a href="/signup">
-                    Signup
-                </a>
+        .login-box{
 
-            </p>
+            width:400px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(15px);
+
+            border:1px solid rgba(255,255,255,0.2);
+
+            border-radius:20px;
+
+            padding:40px;
+
+            position:absolute;
+
+            top:50%;
+            left:50%;
+
+            transform:translate(-50%, -50%);
+
+            color:white;
+
+            box-shadow:0 0 30px rgba(0,0,0,0.4);
+
+            animation:float 4s ease-in-out infinite;
+        }
+
+        @keyframes float{
+
+            0%{
+                transform:translate(-50%, -50%);
+            }
+
+            50%{
+                transform:translate(-50%, -53%);
+            }
+
+            100%{
+                transform:translate(-50%, -50%);
+            }
+        }
+
+        h1{
+
+            text-align:center;
+
+            margin-bottom:30px;
+
+            font-size:40px;
+
+            letter-spacing:2px;
+        }
+
+        .input-box{
+
+            margin-bottom:20px;
+        }
+
+        .input-box input{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            outline:none;
+
+            border-radius:10px;
+
+            background:rgba(255,255,255,0.15);
+
+            color:white;
+
+            font-size:16px;
+        }
+
+        .input-box input::placeholder{
+
+            color:#eee;
+        }
+
+        button{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:10px;
+
+            background:white;
+
+            color:black;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+
+            transform:scale(1.05);
+
+            background:#f1f1f1;
+        }
+
+        .signup-link{
+
+            text-align:center;
+
+            margin-top:20px;
+        }
+
+        .signup-link a{
+
+            color:white;
+
+            text-decoration:none;
+
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- VIDEO BACKGROUND -->
+
+    <video autoplay muted loop class="video-bg">
+
+        <source
+            src="{{ url_for('static', filename='videos/house.mp4') }}"
+            type="video/mp4"
+        >
+
+    </video>
+
+    <div class="overlay"></div>
+
+    <!-- LOGIN BOX -->
+
+    <div class="login-box">
+
+        <h1>LOGIN</h1>
+
+        <form method="POST">
+
+            <div class="input-box">
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    required
+                >
+
+            </div>
+
+            <div class="input-box">
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    required
+                >
+
+            </div>
+
+            <button type="submit">
+
+                Login
+
+            </button>
+
+        </form>
+
+        <div class="signup-link">
+
+            Don't have account?
+
+            <a href="/signup">
+
+                Signup
+
+            </a>
 
         </div>
 
     </div>
 
-</div>
+</body>
 
-{% endblock %}
+</html>

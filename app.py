@@ -44,8 +44,8 @@ mysql = MySQL(app)
 # LOAD AI MODEL
 # =========================================
 model = joblib.load('models/house_price_model.pkl')
-
 encoder = joblib.load('models/area_encoder.pkl')
+
 
 # =========================================
 # HOME PAGE
@@ -54,6 +54,7 @@ encoder = joblib.load('models/area_encoder.pkl')
 def home():
 
     return render_template('home.html')
+
 
 # =========================================
 # SIGNUP
@@ -64,12 +65,9 @@ def signup():
     if request.method == 'POST':
 
         fullname = request.form['fullname']
-
         email = request.form['email']
-
         password = request.form['password']
 
-        # HASH PASSWORD
         hashed_password = generate_password_hash(password)
 
         cur = mysql.connection.cursor()
@@ -87,12 +85,12 @@ def signup():
         )
 
         mysql.connection.commit()
-
         cur.close()
 
         return redirect('/login')
 
     return render_template('signup.html')
+
 
 # =========================================
 # LOGIN
@@ -103,7 +101,6 @@ def login():
     if request.method == 'POST':
 
         email = request.form['email']
-
         password = request.form['password']
 
         cur = mysql.connection.cursor()
@@ -130,9 +127,8 @@ def login():
             ):
 
                 session['loggedin'] = True
-
                 session['user_id'] = user[0]
-
+                session['fullname'] = user[1]
                 session['email'] = user[2]
 
                 return redirect('/dashboard')
@@ -141,17 +137,19 @@ def login():
 
     return render_template('login.html')
 
+
 # =========================================
 # DASHBOARD
 # =========================================
 @app.route('/dashboard')
 def dashboard():
 
-    if 'loggedin' in session:
+    if 'loggedin' not in session:
 
-        return render_template('dashboard.html')
+        return redirect('/login')
 
-    return redirect('/login')
+    return render_template('dashboard.html')
+
 
 # =========================================
 # LOGOUT
@@ -161,7 +159,8 @@ def logout():
 
     session.clear()
 
-    return redirect('/login')
+    return redirect('/')
+
 
 # =========================================
 # ADD PROPERTY
@@ -176,24 +175,19 @@ def add_property():
     if request.method == 'POST':
 
         house_name = request.form['house_name']
-
         owner_name = request.form['owner_name']
-
         location = request.form['location']
-
         price = request.form['price']
 
         image = request.files['image']
 
         filename = secure_filename(image.filename)
 
-        # CREATE FOLDER
         os.makedirs(
             app.config['UPLOAD_FOLDER'],
             exist_ok=True
         )
 
-        # SAVE IMAGE
         image.save(
             os.path.join(
                 app.config['UPLOAD_FOLDER'],
@@ -227,18 +221,18 @@ def add_property():
         )
 
         mysql.connection.commit()
-
         cur.close()
 
         return """
-        <h2>Property Added Successfully</h2>
-
-        <h3>Waiting for Admin Approval</h3>
-
-        <a href='/dashboard'>Go Back</a>
+        <h2 align='center'>Property Added Successfully</h2>
+        <h3 align='center'>Waiting for Admin Approval</h3>
+        <center>
+            <a href='/dashboard'>Go Back</a>
+        </center>
         """
 
     return render_template('add_property.html')
+
 
 # =========================================
 # VIEW PROPERTIES
@@ -247,12 +241,10 @@ def add_property():
 def properties():
 
     location = request.args.get('location')
-
     budget = request.args.get('budget')
 
     cur = mysql.connection.cursor()
 
-    # LOCATION + BUDGET
     if location and budget:
 
         cur.execute(
@@ -268,7 +260,6 @@ def properties():
             )
         )
 
-    # ONLY LOCATION
     elif location:
 
         cur.execute(
@@ -282,7 +273,6 @@ def properties():
             )
         )
 
-    # ONLY BUDGET
     elif budget:
 
         cur.execute(
@@ -291,9 +281,7 @@ def properties():
             WHERE status='approved'
             AND price <= %s
             """,
-            (
-                budget,
-            )
+            (budget,)
         )
 
     else:
@@ -314,25 +302,90 @@ def properties():
         properties=all_properties
     )
 
+
 # =========================================
 # PROPERTY DETAILS + REVIEWS
 # =========================================
 @app.route('/property/<int:id>', methods=['GET', 'POST'])
 def property_details(id):
 
+    if 'loggedin' not in session:
+
+        return """
+
+        <html>
+
+        <head>
+
+            <title>Login Required</title>
+
+            <style>
+
+                body{
+                    font-family:Arial;
+                    background:#f5f7fb;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    height:100vh;
+                }
+
+                .card{
+                    background:white;
+                    padding:40px;
+                    border-radius:12px;
+                    text-align:center;
+                    box-shadow:0 0 15px rgba(0,0,0,0.1);
+                }
+
+                button{
+                    padding:10px 20px;
+                    border:none;
+                    border-radius:6px;
+                    margin:10px;
+                    cursor:pointer;
+                    background:#0d6efd;
+                    color:white;
+                    font-size:16px;
+                }
+
+                a{
+                    text-decoration:none;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <div class='card'>
+
+                <h1>Please Login or Signup</h1>
+
+                <p>To View Full Property Details</p>
+
+                <a href='/login'>
+                    <button>Login</button>
+                </a>
+
+                <a href='/signup'>
+                    <button>Signup</button>
+                </a>
+
+            </div>
+
+        </body>
+
+        </html>
+        """
+
     cur = mysql.connection.cursor()
 
-    # ADD REVIEW
     if request.method == 'POST':
 
-        if 'loggedin' not in session:
-
-            return redirect('/login')
-
         rating = request.form['rating']
-
         review = request.form['review']
-
         user_email = session['email']
 
         cur.execute(
@@ -356,7 +409,6 @@ def property_details(id):
 
         mysql.connection.commit()
 
-    # PROPERTY DETAILS
     cur.execute(
         """
         SELECT * FROM properties
@@ -367,7 +419,6 @@ def property_details(id):
 
     property_data = cur.fetchone()
 
-    # REVIEWS
     cur.execute(
         """
         SELECT * FROM reviews
@@ -385,6 +436,7 @@ def property_details(id):
         property=property_data,
         reviews=reviews
     )
+
 
 # =========================================
 # SAVE FAVORITE
@@ -434,6 +486,7 @@ def save_favorite(property_id):
 
     return redirect('/properties')
 
+
 # =========================================
 # MY FAVORITES
 # =========================================
@@ -468,37 +521,6 @@ def my_favorites():
         properties=favorite_properties
     )
 
-# =========================================
-# REMOVE FAVORITE
-# =========================================
-@app.route('/remove-favorite/<int:property_id>')
-def remove_favorite(property_id):
-
-    if 'loggedin' not in session:
-
-        return redirect('/login')
-
-    user_email = session['email']
-
-    cur = mysql.connection.cursor()
-
-    cur.execute(
-        """
-        DELETE FROM favorites
-        WHERE user_email=%s
-        AND property_id=%s
-        """,
-        (
-            user_email,
-            property_id
-        )
-    )
-
-    mysql.connection.commit()
-
-    cur.close()
-
-    return redirect('/my-favorites')
 
 # =========================================
 # CHAT SYSTEM
@@ -514,7 +536,6 @@ def chat(property_id):
 
     cur = mysql.connection.cursor()
 
-    # SEND MESSAGE
     if request.method == 'POST':
 
         message = request.form['message']
@@ -538,7 +559,6 @@ def chat(property_id):
 
         mysql.connection.commit()
 
-    # PROPERTY
     cur.execute(
         """
         SELECT * FROM properties
@@ -549,7 +569,6 @@ def chat(property_id):
 
     property_data = cur.fetchone()
 
-    # MESSAGES
     cur.execute(
         """
         SELECT * FROM chats
@@ -569,6 +588,7 @@ def chat(property_id):
         messages=messages
     )
 
+
 # =========================================
 # AI PREDICTION
 # =========================================
@@ -576,11 +596,8 @@ def chat(property_id):
 def predict():
 
     predicted_price = None
-
     min_price = None
-
     max_price = None
-
     error = None
 
     available_areas = list(encoder.classes_)
@@ -592,11 +609,8 @@ def predict():
             area_name = request.form['area'].strip().lower()
 
             sqft = int(request.form['sqft'])
-
             bedrooms = int(request.form['bedrooms'])
-
             bathrooms = int(request.form['bathrooms'])
-
             rooms = int(request.form['rooms'])
 
             available_areas_lower = [
@@ -627,7 +641,6 @@ def predict():
                 predicted_price = round(prediction[0])
 
                 min_price = predicted_price - 1000000
-
                 max_price = predicted_price + 1000000
 
             else:
@@ -649,8 +662,9 @@ def predict():
         available_areas=available_areas
     )
 
+
 # =========================================
-# ANALYTICS CHART
+# ANALYTICS
 # =========================================
 @app.route('/analytics')
 def analytics():
@@ -670,13 +684,11 @@ def analytics():
     cur.close()
 
     locations = []
-
     prices = []
 
     for row in data:
 
         locations.append(row[0])
-
         prices.append(int(row[1]))
 
     return render_template(
@@ -684,6 +696,7 @@ def analytics():
         locations=locations,
         prices=prices
     )
+
 
 # =========================================
 # ADMIN LOGIN
@@ -694,7 +707,6 @@ def admin_login():
     if request.method == 'POST':
 
         username = request.form['username']
-
         password = request.form['password']
 
         if username == 'admin' and password == 'admin123':
@@ -703,11 +715,10 @@ def admin_login():
 
             return redirect('/admin-dashboard')
 
-        else:
-
-            return "Invalid Admin Credentials"
+        return "Invalid Admin Credentials"
 
     return render_template('admin_login.html')
+
 
 # =========================================
 # ADMIN DASHBOARD
@@ -721,7 +732,6 @@ def admin_dashboard():
 
     cur = mysql.connection.cursor()
 
-    # PENDING PROPERTIES
     cur.execute(
         """
         SELECT * FROM properties
@@ -731,84 +741,13 @@ def admin_dashboard():
 
     pending_properties = cur.fetchall()
 
-    # TOTAL USERS
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM users
-        """
-    )
-
-    total_users = cur.fetchone()[0]
-
-    # TOTAL PROPERTIES
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM properties
-        """
-    )
-
-    total_properties = cur.fetchone()[0]
-
-    # APPROVED
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM properties
-        WHERE status='approved'
-        """
-    )
-
-    approved_properties = cur.fetchone()[0]
-
-    # PENDING COUNT
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM properties
-        WHERE status='pending'
-        """
-    )
-
-    pending_count = cur.fetchone()[0]
-
-    # REVIEWS
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM reviews
-        """
-    )
-
-    total_reviews = cur.fetchone()[0]
-
-    # FAVORITES
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM favorites
-        """
-    )
-
-    total_favorites = cur.fetchone()[0]
-
-    # CHATS
-    cur.execute(
-        """
-        SELECT COUNT(*) FROM chats
-        """
-    )
-
-    total_chats = cur.fetchone()[0]
-
     cur.close()
 
     return render_template(
         'admin_dashboard.html',
-        properties=pending_properties,
-        total_users=total_users,
-        total_properties=total_properties,
-        approved_properties=approved_properties,
-        pending_count=pending_count,
-        total_reviews=total_reviews,
-        total_favorites=total_favorites,
-        total_chats=total_chats
+        properties=pending_properties
     )
+
 
 # =========================================
 # APPROVE PROPERTY
@@ -837,6 +776,7 @@ def approve_property(id):
 
     return redirect('/admin-dashboard')
 
+
 # =========================================
 # DELETE PROPERTY
 # =========================================
@@ -863,76 +803,76 @@ def delete_property(id):
 
     return redirect('/admin-dashboard')
 
+
 # =========================================
-# HI PAGE
+# UPDATE PROFILE
 # =========================================
-@app.route('/hi')
-def hi():
+@app.route('/update-profile')
+def update_profile():
+
+    if 'loggedin' not in session:
+
+        return redirect('/login')
+
+    return f"""
+    <h1 align='center'>Update Profile</h1>
+
+    <p align='center'>
+        Logged in as: {session['email']}
+    </p>
+    """
+
+
+# =========================================
+# MESSAGE CENTER
+# =========================================
+@app.route('/message-center')
+def message_center():
+
+    if 'loggedin' not in session:
+
+        return redirect('/login')
 
     return """
-    <html>
+    <h1 align='center'>Message Center</h1>
 
-    <head>
-
-        <title>Hi Amjali</title>
-
-        <style>
-
-            body{
-                margin:0;
-                padding:0;
-                height:100vh;
-
-                display:flex;
-                justify-content:center;
-                align-items:center;
-
-                background: linear-gradient(
-                    135deg,
-                    #ffffff,
-                    #f8f9fa,
-                    #eef1f5
-                );
-
-                font-family: Arial, sans-serif;
-            }
-
-            h1{
-                font-size:70px;
-                color:white;
-
-                text-shadow:2px 2px 10px rgba(0,0,0,0.3);
-
-                animation: glow 2s infinite;
-            }
-
-            @keyframes glow{
-
-                0%{
-                    transform:scale(1);
-                }
-
-                50%{
-                    transform:scale(1.1);
-                }
-
-                100%{
-                    transform:scale(1);
-                }
-            }
-
-        </style>
-
-    </head>
-
-    <body>
-
-        <h1>Hi Anjali </h1>
-
-    </body>
-
-    </html>
+    <p align='center'>No New Messages</p>
     """
+
+
+# =========================================
+# NOTIFICATIONS
+# =========================================
+@app.route('/notifications')
+def notifications():
+
+    if 'loggedin' not in session:
+
+        return redirect('/login')
+
+    return """
+    <h1 align='center'>Notifications</h1>
+
+    <p align='center'>No Notifications Available</p>
+    """
+
+
+# =========================================
+# FEEDBACKS
+# =========================================
+@app.route('/feedbacks')
+def feedbacks():
+
+    if 'loggedin' not in session:
+
+        return redirect('/login')
+
+    return """
+    <h1 align='center'>Feedback Messages</h1>
+
+    <p align='center'>No Feedback Messages</p>
+    """
+
 
 # =========================================
 # MAIN
