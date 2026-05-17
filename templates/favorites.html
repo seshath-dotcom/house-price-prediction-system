@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-danger mb-4">
+
+    ❤️ My Favorite Properties
+
+</h1>
+
+<div class="row">
+
+    {% if properties %}
+
+        {% for property in properties %}
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow h-100">
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + property[5]) }}"
+                        class="card-img-top"
+                        height="250"
+                        style="object-fit: cover;"
+                    >
+
+                    <div class="card-body">
+
+                        <h4 class="text-success">
+
+                            {{ property[1] }}
+
+                        </h4>
+
+                        <p>
+                            <strong>Location:</strong>
+                            {{ property[3] }}
+                        </p>
+
+                        <p class="fw-bold text-primary">
+
+                            ₹ {{ property[4] }}
+
+                        </p>
+
+                        <a
+                            href="/property/{{ property[0] }}"
+                            class="btn btn-success w-100 mb-2"
+                        >
+
+                            View Details
+
+                        </a>
+
+                        <a
+                            href="/remove-favorite/{{ property[0] }}"
+                            class="btn btn-danger w-100"
+                        >
+
+                            Remove Favorite
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="col-md-12">
+
+            <div class="alert alert-warning text-center">
+
+                No Favorite Properties Yet
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

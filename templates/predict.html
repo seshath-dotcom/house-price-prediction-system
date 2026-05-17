@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+
+    <!-- Prediction Form -->
+    <div class="col-md-5">
+
+        <div class="card shadow p-4">
+
+            <h2 class="mb-4 text-success">
+                AI House Price Prediction
+            </h2>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Area Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="area"
+                        class="form-control"
+                        placeholder="Example: Adyar"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Square Feet
+                    </label>
+
+                    <input
+                        type="number"
+                        name="sqft"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Bedrooms
+                    </label>
+
+                    <input
+                        type="number"
+                        name="bedrooms"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Bathrooms
+                    </label>
+
+                    <input
+                        type="number"
+                        name="bathrooms"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Rooms
+                    </label>
+
+                    <input
+                        type="number"
+                        name="rooms"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <button class="btn btn-success w-100">
+                    Predict Price
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Prediction Result -->
+    <div class="col-md-4">
+
+        {% if predicted_price %}
+
+            <div class="card shadow p-4">
+
+                <h3 class="text-success">
+                    Prediction Result
+                </h3>
+
+                <hr>
+
+                <h5>
+                    Predicted Price:
+                </h5>
+
+                <p class="fw-bold text-primary">
+                    ₹ {{ predicted_price }}
+                </p>
+
+                <h5>
+                    Minimum Price:
+                </h5>
+
+                <p class="fw-bold text-warning">
+                    ₹ {{ min_price }}
+                </p>
+
+                <h5>
+                    Maximum Price:
+                </h5>
+
+                <p class="fw-bold text-danger">
+                    ₹ {{ max_price }}
+                </p>
+
+            </div>
+
+        {% endif %}
+
+        {% if error %}
+
+            <div class="alert alert-danger">
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Available Areas -->
+    <div class="col-md-3">
+
+        <div class="card shadow p-3">
+
+            <h4 class="text-success">
+                Available Areas
+            </h4>
+
+            <hr>
+
+            <div style="max-height:400px; overflow-y:auto;">
+
+                <ul class="list-group">
+
+                    {% for area in available_areas %}
+
+                        <li class="list-group-item">
+
+                            {{ area }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

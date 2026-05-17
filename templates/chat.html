@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <!-- PROPERTY INFO -->
+        <div class="card shadow p-4 mb-4">
+
+            <h2 class="text-success">
+
+                {{ property[1] }}
+
+            </h2>
+
+            <p>
+
+                <strong>Location:</strong>
+                {{ property[3] }}
+
+            </p>
+
+            <p class="fw-bold text-primary">
+
+                ₹ {{ property[4] }}
+
+            </p>
+
+        </div>
+
+        <!-- CHAT BOX -->
+        <div class="card shadow p-4 mb-4">
+
+            <h3 class="text-success mb-4">
+
+                💬 Chat with Seller
+
+            </h3>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <textarea
+                        name="message"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Type your message..."
+                        required
+                    ></textarea>
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    Send Message
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="card shadow p-4">
+
+            <h3 class="text-success mb-4">
+
+                Conversation
+
+            </h3>
+
+            {% if messages %}
+
+                {% for msg in messages %}
+
+                    <div class="border rounded p-3 mb-3">
+
+                        <p>
+
+                            {{ msg[3] }}
+
+                        </p>
+
+                        <small class="text-muted">
+
+                            By:
+                            {{ msg[2] }}
+
+                        </small>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>No Messages Yet</p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

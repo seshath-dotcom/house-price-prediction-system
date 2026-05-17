@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow p-5 text-center">
+
+    <h1 class="text-success">
+
+        Welcome to Dashboard
+
+    </h1>
+
+    <p class="mt-4 fs-5">
+
+        Manage your properties,
+        predict house prices,
+        and explore real-estate listings.
+
+    </p>
+
+    <div class="mt-4">
+
+        <a href="/add-property" class="btn btn-success btn-lg">
+
+            Add Property
+
+        </a>
+
+        <a href="/properties" class="btn btn-dark btn-lg ms-3">
+
+            View Properties
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

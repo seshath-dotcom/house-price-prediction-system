@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-success mb-5">
+
+    📈 Property Price Analytics
+
+</h1>
+
+<div class="card shadow p-5">
+
+    <canvas id="priceChart"></canvas>
+
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const ctx = document.getElementById('priceChart');
+
+    new Chart(ctx, {
+
+        type: 'bar',
+
+        data: {
+
+            labels: {{ locations|tojson }},
+
+            datasets: [{
+
+                label: 'Property Prices',
+
+                data: {{ prices|tojson }},
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

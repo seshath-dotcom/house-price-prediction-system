@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-danger mb-5">
+
+    📊 Admin Analytics Dashboard
+
+</h1>
+
+<!-- ANALYTICS CARDS -->
+<div class="row mb-5">
+
+    <!-- TOTAL USERS -->
+    <div class="col-md-3 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-primary">
+
+                {{ total_users }}
+
+            </h2>
+
+            <h5>Total Users</h5>
+
+        </div>
+
+    </div>
+
+    <!-- TOTAL PROPERTIES -->
+    <div class="col-md-3 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-success">
+
+                {{ total_properties }}
+
+            </h2>
+
+            <h5>Total Properties</h5>
+
+        </div>
+
+    </div>
+
+    <!-- APPROVED -->
+    <div class="col-md-3 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-info">
+
+                {{ approved_properties }}
+
+            </h2>
+
+            <h5>Approved Properties</h5>
+
+        </div>
+
+    </div>
+
+    <!-- PENDING -->
+    <div class="col-md-3 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-danger">
+
+                {{ pending_count }}
+
+            </h2>
+
+            <h5>Pending Properties</h5>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SECOND ROW -->
+<div class="row mb-5">
+
+    <!-- REVIEWS -->
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-warning">
+
+                {{ total_reviews }}
+
+            </h2>
+
+            <h5>Total Reviews</h5>
+
+        </div>
+
+    </div>
+
+    <!-- FAVORITES -->
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-danger">
+
+                {{ total_favorites }}
+
+            </h2>
+
+            <h5>Total Favorites</h5>
+
+        </div>
+
+    </div>
+
+    <!-- CHATS -->
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow text-center p-4">
+
+            <h2 class="text-success">
+
+                {{ total_chats }}
+
+            </h2>
+
+            <h5>Total Chats</h5>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PENDING PROPERTIES -->
+<h2 class="text-danger mb-4">
+
+    Pending Property Approvals
+
+</h2>
+
+<div class="row">
+
+    {% for property in properties %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow">
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + property[5]) }}"
+                    class="card-img-top"
+                    height="250"
+                    style="object-fit: cover;"
+                >
+
+                <div class="card-body">
+
+                    <h4>{{ property[1] }}</h4>
+
+                    <p>
+                        <strong>Owner:</strong>
+                        {{ property[2] }}
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        {{ property[3] }}
+                    </p>
+
+                    <p class="text-success fw-bold">
+                        ₹ {{ property[4] }}
+                    </p>
+
+                    <a
+                        href="/approve-property/{{ property[0] }}"
+                        class="btn btn-success"
+                    >
+                        Approve
+                    </a>
+
+                    <a
+                        href="/delete-property/{{ property[0] }}"
+                        class="btn btn-danger"
+                    >
+                        Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="mb-4 text-success">
+    Available Properties
+</h1>
+
+<!-- SEARCH FORM -->
+<div class="card shadow p-4 mb-5">
+
+    <form method="GET">
+
+        <div class="row">
+
+            <!-- LOCATION -->
+            <div class="col-md-5 mb-3">
+
+                <input
+                    type="text"
+                    name="location"
+                    class="form-control"
+                    placeholder="Search by Location"
+                >
+
+            </div>
+
+            <!-- BUDGET -->
+            <div class="col-md-5 mb-3">
+
+                <input
+                    type="number"
+                    name="budget"
+                    class="form-control"
+                    placeholder="Maximum Budget"
+                >
+
+            </div>
+
+            <!-- SEARCH BUTTON -->
+            <div class="col-md-2 mb-3">
+
+                <button class="btn btn-success w-100">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<!-- PROPERTY LIST -->
+<div class="row">
+
+    {% if properties %}
+
+        {% for property in properties %}
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow h-100">
+
+                    <!-- PROPERTY IMAGE -->
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + property[5]) }}"
+                        class="card-img-top"
+                        height="250"
+                        style="object-fit: cover;"
+                    >
+
+                    <!-- CARD BODY -->
+                    <div class="card-body d-flex flex-column">
+
+                        <h4 class="card-title text-success">
+
+                            {{ property[1] }}
+
+                        </h4>
+
+                        <hr>
+
+                        <p>
+
+                            <strong>Owner:</strong>
+                            {{ property[2] }}
+
+                        </p>
+
+                        <p>
+
+                            <strong>Location:</strong>
+                            {{ property[3] }}
+
+                        </p>
+
+                        <p class="fw-bold text-primary fs-5">
+
+                            ₹ {{ property[4] }}
+
+                        </p>
+
+                        <!-- BUTTONS -->
+                        <div class="mt-auto">
+
+                            <!-- VIEW DETAILS -->
+                            <a
+                                href="/save-favorite/{{ property[0] }}"
+                                class="btn btn-danger w-100"
+                            >
+
+                                ❤️ Save Property
+
+                            </a>
+                            <a
+                                href="/property/{{ property[0] }}"
+                                class="btn btn-success w-100 mb-2"
+                            >
+
+                                View Details
+
+                            </a>
+                            <a
+                                href="/chat/{{ property[0] }}"
+                                class="btn btn-dark w-100 mt-3"
+                            >
+
+                                💬 Contact Seller
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="col-md-12">
+
+            <div class="alert alert-danger text-center">
+
+                No Properties Found
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

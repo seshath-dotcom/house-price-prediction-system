@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow p-5">
+
+            <h2 class="text-success text-center mb-4">
+
+                Add New Property
+
+            </h2>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <!-- HOUSE NAME -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        House Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="house_name"
+                        class="form-control"
+                        placeholder="Enter House Name"
+                        required
+                    >
+
+                </div>
+
+                <!-- OWNER NAME -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Owner Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="owner_name"
+                        class="form-control"
+                        placeholder="Enter Owner Name"
+                        required
+                    >
+
+                </div>
+
+                <!-- LOCATION -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Property Location
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="location"
+                        class="form-control"
+                        placeholder="Example: Adyar Chennai"
+                        required
+                    >
+
+                    <small class="text-muted">
+
+                        Enter full area/location for better Google Maps accuracy
+
+                    </small>
+
+                </div>
+
+                <!-- PRICE -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Property Price
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="price"
+                        class="form-control"
+                        placeholder="Enter Property Price"
+                        required
+                    >
+
+                </div>
+
+                <!-- PROPERTY IMAGE -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Property Image
+
+                    </label>
+
+                    <input
+                        type="file"
+                        name="image"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <button class="btn btn-success w-100">
+
+                    Add Property
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
