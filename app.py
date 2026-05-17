@@ -864,6 +864,77 @@ def delete_property(id):
     return redirect('/admin-dashboard')
 
 # =========================================
+# HI PAGE
+# =========================================
+@app.route('/hi')
+def hi():
+
+    return """
+    <html>
+
+    <head>
+
+        <title>Hi Amjali</title>
+
+        <style>
+
+            body{
+                margin:0;
+                padding:0;
+                height:100vh;
+
+                display:flex;
+                justify-content:center;
+                align-items:center;
+
+                background: linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #f8f9fa,
+                    #eef1f5
+                );
+
+                font-family: Arial, sans-serif;
+            }
+
+            h1{
+                font-size:70px;
+                color:white;
+
+                text-shadow:2px 2px 10px rgba(0,0,0,0.3);
+
+                animation: glow 2s infinite;
+            }
+
+            @keyframes glow{
+
+                0%{
+                    transform:scale(1);
+                }
+
+                50%{
+                    transform:scale(1.1);
+                }
+
+                100%{
+                    transform:scale(1);
+                }
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <h1>Hi Anjali </h1>
+
+    </body>
+
+    </html>
+    """
+
+# =========================================
 # MAIN
 # =========================================
 if __name__ == '__main__':
