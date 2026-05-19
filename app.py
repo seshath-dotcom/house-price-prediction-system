@@ -8,6 +8,13 @@ from flask import (
     redirect,
     session
 )
+import random
+
+from flask_mail import Mail, Message
+
+import random
+
+from flask import flash
 
 from flask_mysqldb import MySQL
 
@@ -40,6 +47,24 @@ app.config['MYSQL_DB'] = 'house_prediction_db'
 
 mysql = MySQL(app)
 
+#mail Config
+
+# =========================================
+# MAIL CONFIGURATION
+# =========================================
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+
+app.config['MAIL_PORT'] = 587
+
+app.config['MAIL_USE_TLS'] = True
+
+app.config['MAIL_USERNAME'] = 'seshathrisesha5@gmail.com'
+
+app.config['MAIL_PASSWORD'] = 'jepe qasp keyy nqrz'
+
+mail = Mail(app)
+
 # =========================================
 # LOAD AI MODEL
 # =========================================
@@ -64,7 +89,11 @@ def signup():
 
     if request.method == 'POST':
 
-        fullname = request.form['fullname']
+        first_name = request.form['first_name']
+
+        last_name = request.form['last_name']
+
+        fullname = first_name + " " + last_name
         email = request.form['email']
         password = request.form['password']
 
@@ -95,12 +124,34 @@ def signup():
 # =========================================
 # LOGIN
 # =========================================
+# =========================================
+# LOGIN
+# =========================================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
-    if request.method == 'POST':
+    # =====================================
+    # GET REQUEST
+    # =====================================
+
+    if request.method == 'GET':
+
+        return render_template('login.html')
+
+    # =====================================
+    # POST REQUEST
+    # =====================================
+
+    login_type = request.form.get('login_type')
+
+    # =====================================
+    # PASSWORD LOGIN
+    # =====================================
+
+    if login_type == 'password':
 
         email = request.form['email']
+
         password = request.form['password']
 
         cur = mysql.connection.cursor()
@@ -127,17 +178,170 @@ def login():
             ):
 
                 session['loggedin'] = True
+
                 session['user_id'] = user[0]
-                session['fullname'] = user[1]
+
                 session['email'] = user[2]
 
                 return redirect('/dashboard')
 
-        return "Invalid Email or Password"
+        return render_template(
+            'login.html',
+            error="Invalid Email or Password"
+        )
 
-    return render_template('login.html')
+    # =====================================
+    # OTP LOGIN
+    # =====================================
 
+    elif login_type == 'otp':
 
+        otp_email = request.form.get('otp_email')
+
+        entered_otp = request.form.get('otp')
+
+        # =================================
+        # SEND OTP
+        # =================================
+
+        if entered_otp is None or entered_otp == '':
+
+            # CHECK USER EXISTS
+
+            cur = mysql.connection.cursor()
+
+            cur.execute(
+                """
+                SELECT * FROM users
+                WHERE email=%s
+                """,
+                (otp_email,)
+            )
+
+            user = cur.fetchone()
+
+            cur.close()
+
+            # IF USER NOT FOUND
+
+            if not user:
+
+                return render_template(
+                    'login.html',
+                    error="Please Signup First"
+                )
+
+            # GENERATE OTP
+
+            generated_otp = str(
+                random.randint(100000, 999999)
+            )
+
+            # SAVE SESSION
+
+            session['otp'] = generated_otp
+
+            session['otp_email'] = otp_email
+
+            # SEND EMAIL
+
+            msg = Message(
+
+                'SMART PROP AI - Login OTP',
+
+                sender=app.config['MAIL_USERNAME'],
+
+                recipients=[otp_email]
+            )
+
+            msg.body = f"""
+        Your OTP is: {generated_otp}
+
+        Do not share this OTP.
+
+        SMART PROP AI
+        """
+
+            mail.send(msg)
+
+            return render_template(
+                'login.html',
+                otp_sent=True,
+                otp_email=otp_email
+            )
+
+        # =================================
+        # VERIFY OTP
+        # =================================
+
+        else:
+
+            saved_otp = str(session.get('otp')).strip()
+
+            saved_email = str(session.get('otp_email')).strip()
+
+            entered_otp = str(entered_otp).strip()
+
+            otp_email = str(otp_email).strip()
+
+            print("Entered OTP:", entered_otp)
+            print("Saved OTP:", saved_otp)
+
+            if (
+                entered_otp == saved_otp
+                and
+                otp_email == saved_email
+            ):
+
+                cur = mysql.connection.cursor()
+
+                cur.execute(
+                    """
+                    SELECT * FROM users
+                    WHERE email=%s
+                    """,
+                    (otp_email,)
+                )
+
+                user = cur.fetchone()
+
+                cur.close()
+
+                if user:
+
+                    session['loggedin'] = True
+
+                    session['user_id'] = user[0]
+
+                    session['email'] = user[2]
+
+                    # CLEAR OTP SESSION
+
+                    session.pop('otp', None)
+
+                    session.pop('otp_email', None)
+
+                    return redirect('/dashboard')
+
+                else:
+
+                    return render_template(
+                        'login.html',
+                        error="User Not Found"
+                    )
+
+            return render_template(
+                'login.html',
+                error="Invalid OTP",
+                otp_sent=True,
+                otp_email=otp_email
+            )
+
+    # =====================================
+    # FALLBACK
+    # =====================================
+
+    return render_template('login.html')    
 # =========================================
 # DASHBOARD
 # =========================================

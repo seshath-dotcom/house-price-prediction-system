@@ -4,11 +4,21 @@
 
 <head>
 
-    <title>Login</title>
+    <title>Login - SMART PROP AI</title>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <!-- FONT AWESOME -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
 
     <style>
 
@@ -16,11 +26,20 @@
             margin:0;
             padding:0;
             box-sizing:border-box;
-            font-family:Arial;
+            font-family:Arial, sans-serif;
         }
 
         body{
+
+            height:100vh;
+
             overflow:hidden;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
         }
 
         /* VIDEO BACKGROUND */
@@ -29,11 +48,11 @@
 
             position:fixed;
 
-            right:0;
-            bottom:0;
+            top:0;
+            left:0;
 
-            min-width:100%;
-            min-height:100%;
+            width:100%;
+            height:100%;
 
             object-fit:cover;
 
@@ -46,84 +65,78 @@
 
             position:fixed;
 
+            top:0;
+            left:0;
+
             width:100%;
             height:100%;
 
-            background:rgba(0,0,0,0.45);
+            background:rgba(0,0,0,0.55);
 
             z-index:-1;
         }
 
-        /* CENTER BOX */
+        /* LOGIN CARD */
 
         .login-box{
 
-            width:400px;
+            width:420px;
+
+            padding:40px;
+
+            border-radius:25px;
 
             background:rgba(255,255,255,0.12);
 
             backdrop-filter:blur(15px);
 
-            border:1px solid rgba(255,255,255,0.2);
-
-            border-radius:20px;
-
-            padding:40px;
-
-            position:absolute;
-
-            top:50%;
-            left:50%;
-
-            transform:translate(-50%, -50%);
+            box-shadow:0 0 25px rgba(0,0,0,0.4);
 
             color:white;
 
-            box-shadow:0 0 30px rgba(0,0,0,0.4);
-
-            animation:float 4s ease-in-out infinite;
+            animation:fadeIn 1s ease;
         }
 
-        @keyframes float{
+        @keyframes fadeIn{
 
-            0%{
-                transform:translate(-50%, -50%);
+            from{
+                opacity:0;
+                transform:translateY(30px);
             }
 
-            50%{
-                transform:translate(-50%, -53%);
-            }
-
-            100%{
-                transform:translate(-50%, -50%);
+            to{
+                opacity:1;
+                transform:translateY(0);
             }
         }
 
-        h1{
+        .login-box h1{
 
             text-align:center;
 
             margin-bottom:30px;
 
-            font-size:40px;
-
-            letter-spacing:2px;
+            font-size:38px;
         }
 
-        .input-box{
+        /* TABS */
 
-            margin-bottom:20px;
+        .login-tabs{
+
+            display:flex;
+
+            gap:10px;
+
+            margin-bottom:25px;
         }
 
-        .input-box input{
+        .login-tabs button{
 
-            width:100%;
+            flex:1;
 
-            padding:15px;
+            padding:12px;
 
             border:none;
-
-            outline:none;
 
             border-radius:10px;
 
@@ -131,15 +144,30 @@
 
             color:white;
 
-            font-size:16px;
+            cursor:pointer;
+
+            font-size:15px;
+
+            transition:0.3s;
         }
 
-        .input-box input::placeholder{
+        .active-tab{
 
-            color:#eee;
+            background:white !important;
+
+            color:black !important;
+
+            font-weight:bold;
         }
 
-        button{
+        /* INPUT GROUP */
+
+        .input-group{
+
+            margin-bottom:18px;
+        }
+
+        .input-group input{
 
             width:100%;
 
@@ -147,13 +175,39 @@
 
             border:none;
 
-            border-radius:10px;
+            border-radius:12px;
+
+            outline:none;
+
+            background:rgba(255,255,255,0.18);
+
+            color:white;
+
+            font-size:16px;
+        }
+
+        .input-group input::placeholder{
+
+            color:#ddd;
+        }
+
+        /* BUTTON */
+
+        .login-btn{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:12px;
 
             background:white;
 
             color:black;
 
-            font-size:18px;
+            font-size:17px;
 
             font-weight:bold;
 
@@ -162,21 +216,60 @@
             transition:0.3s;
         }
 
-        button:hover{
+        .login-btn:hover{
 
-            transform:scale(1.05);
-
-            background:#f1f1f1;
+            transform:scale(1.03);
         }
 
-        .signup-link{
+        /* OTP BUTTONS */
+
+        .otp-buttons{
+
+            display:flex;
+
+            gap:10px;
+        }
+
+        .small-btn{
+
+            flex:1;
+
+            padding:13px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:white;
+
+            color:black;
+
+            font-size:15px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .small-btn:hover{
+
+            transform:scale(1.03);
+        }
+
+        /* TEXT */
+
+        .bottom-text{
 
             text-align:center;
 
             margin-top:20px;
+
+            color:#ddd;
         }
 
-        .signup-link a{
+        .bottom-text a{
 
             color:white;
 
@@ -185,15 +278,51 @@
             font-weight:bold;
         }
 
+        /* SUCCESS MESSAGE */
+
+        .success-msg{
+
+            text-align:center;
+
+            margin-bottom:18px;
+
+            color:#7CFC00;
+
+            font-size:15px;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:500px){
+
+            .login-box{
+
+                width:90%;
+
+                padding:30px 20px;
+            }
+
+            .login-box h1{
+
+                font-size:30px;
+            }
+        }
+
     </style>
 
 </head>
 
 <body>
 
-    <!-- VIDEO BACKGROUND -->
+    <!-- VIDEO -->
 
-    <video autoplay muted loop class="video-bg">
+    <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="video-bg"
+    >
 
         <source
             src="{{ url_for('static', filename='videos/house.mp4') }}"
@@ -202,17 +331,61 @@
 
     </video>
 
+    <!-- OVERLAY -->
+
     <div class="overlay"></div>
 
     <!-- LOGIN BOX -->
 
     <div class="login-box">
 
-        <h1>LOGIN</h1>
+        <h1>
 
-        <form method="POST">
+            Welcome Back
 
-            <div class="input-box">
+        </h1>
+
+        <!-- TABS -->
+
+        <div class="login-tabs">
+
+            <button
+                type="button"
+                id="passwordTab"
+                class="active-tab"
+                onclick="showPasswordLogin()"
+            >
+
+                Password Login
+
+            </button>
+
+            <button
+                type="button"
+                id="otpTab"
+                onclick="showOtpLogin()"
+            >
+
+                OTP Login
+
+            </button>
+
+        </div>
+
+        <!-- PASSWORD LOGIN -->
+
+        <form
+            method="POST"
+            id="passwordForm"
+        >
+
+            <input
+                type="hidden"
+                name="login_type"
+                value="password"
+            >
+
+            <div class="input-group">
 
                 <input
                     type="email"
@@ -223,7 +396,7 @@
 
             </div>
 
-            <div class="input-box">
+            <div class="input-group">
 
                 <input
                     type="password"
@@ -234,7 +407,10 @@
 
             </div>
 
-            <button type="submit">
+            <button
+                type="submit"
+                class="login-btn"
+            >
 
                 Login
 
@@ -242,9 +418,106 @@
 
         </form>
 
-        <div class="signup-link">
+        <!-- OTP LOGIN -->
 
-            Don't have account?
+        <form
+            method="POST"
+            id="otpForm"
+            style="display:none;"
+        >
+
+            <input
+                type="hidden"
+                name="login_type"
+                value="otp"
+            >
+
+            <!-- SUCCESS -->
+
+            {% if otp_sent %}
+
+            <div class="success-msg">
+
+                OTP Sent Successfully
+
+            </div>
+
+            {% endif %}
+
+            <!-- EMAIL -->
+
+            <div class="input-group">
+
+                <input
+                    type="email"
+                    name="otp_email"
+                    placeholder="Enter Email"
+                    value="{{ otp_email if otp_email else '' }}"
+                    required
+                >
+
+            </div>
+
+            <!-- OTP -->
+
+            {% if otp_sent %}
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="otp"
+                    placeholder="Enter OTP"
+                    required
+                >
+
+            </div>
+
+            {% endif %}
+
+            <!-- BUTTONS -->
+
+            <div class="otp-buttons">
+
+                <!-- SEND OTP BUTTON -->
+
+                {% if not otp_sent %}
+
+                <button
+                    type="submit"
+                    class="small-btn"
+                >
+
+                    Send OTP
+
+                </button>
+
+                {% endif %}
+
+                <!-- LOGIN BUTTON -->
+
+                {% if otp_sent %}
+
+                <button
+                    type="submit"
+                    class="small-btn"
+                >
+
+                    Login
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </form>
+
+        <!-- SIGNUP -->
+
+        <div class="bottom-text">
+
+            Don't have an account?
 
             <a href="/signup">
 
@@ -255,6 +528,42 @@
         </div>
 
     </div>
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        function showPasswordLogin(){
+
+            document.getElementById('passwordForm').style.display = 'block';
+
+            document.getElementById('otpForm').style.display = 'none';
+
+            document.getElementById('passwordTab').classList.add('active-tab');
+
+            document.getElementById('otpTab').classList.remove('active-tab');
+        }
+
+        function showOtpLogin(){
+
+            document.getElementById('passwordForm').style.display = 'none';
+
+            document.getElementById('otpForm').style.display = 'block';
+
+            document.getElementById('otpTab').classList.add('active-tab');
+
+            document.getElementById('passwordTab').classList.remove('active-tab');
+        }
+
+        // KEEP OTP TAB ACTIVE AFTER OTP SENT
+
+        {% if otp_sent %}
+
+        showOtpLogin();
+
+        {% endif %}
+
+    </script>
 
 </body>
 

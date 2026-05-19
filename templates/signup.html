@@ -1,86 +1,333 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
 
-{% block content %}
+<html>
 
-<div class="row justify-content-center">
+<head>
 
-    <div class="col-md-5">
+    <title>Signup - SMART PROP AI</title>
 
-        <div class="card shadow p-5">
+    <meta charset="UTF-8">
 
-            <h2 class="text-center text-success mb-4">
-                Create Account
-            </h2>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-            <form method="POST">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
 
-                <div class="mb-3">
+    <style>
 
-                    <label class="form-label">
-                        Full Name
-                    </label>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
 
-                    <input
-                        type="text"
-                        name="fullname"
-                        class="form-control"
-                        required
-                    >
+        body{
 
-                </div>
+            height:100vh;
 
-                <div class="mb-3">
+            overflow:hidden;
 
-                    <label class="form-label">
-                        Email Address
-                    </label>
+            display:flex;
 
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        required
-                    >
+            justify-content:center;
 
-                </div>
+            align-items:center;
+        }
 
-                <div class="mb-3">
+        /* VIDEO BACKGROUND */
 
-                    <label class="form-label">
-                        Password
-                    </label>
+        .video-bg{
 
-                    <input
-                        type="password"
-                        name="password"
-                        class="form-control"
-                        required
-                    >
+            position:fixed;
 
-                </div>
+            top:0;
+            left:0;
 
-                <button class="btn btn-success w-100">
+            width:100%;
+            height:100%;
 
-                    Signup
+            object-fit:cover;
 
-                </button>
+            z-index:-2;
+        }
 
-            </form>
+        /* DARK OVERLAY */
 
-            <p class="mt-4 text-center">
+        .overlay{
 
-                Already have an account?
+            position:fixed;
 
-                <a href="/login">
-                    Login
-                </a>
+            top:0;
+            left:0;
 
-            </p>
+            width:100%;
+            height:100%;
+
+            background:rgba(0,0,0,0.55);
+
+            z-index:-1;
+        }
+
+        /* SIGNUP BOX */
+
+        .signup-box{
+
+            width:420px;
+
+            padding:40px;
+
+            border-radius:25px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(15px);
+
+            box-shadow:0 0 25px rgba(0,0,0,0.4);
+
+            color:white;
+
+            animation:fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translateY(30px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .signup-box h1{
+
+            text-align:center;
+
+            margin-bottom:30px;
+
+            font-size:38px;
+        }
+
+        .input-group{
+
+            margin-bottom:20px;
+        }
+
+        .input-group input{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:12px;
+
+            outline:none;
+
+            background:rgba(255,255,255,0.18);
+
+            color:white;
+
+            font-size:16px;
+        }
+
+        .input-group input::placeholder{
+
+            color:#ddd;
+        }
+
+        .signup-btn{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:white;
+
+            color:black;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .signup-btn:hover{
+
+            transform:scale(1.03);
+        }
+
+        .bottom-text{
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:#ddd;
+        }
+
+        .bottom-text a{
+
+            color:white;
+
+            text-decoration:none;
+
+            font-weight:bold;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:500px){
+
+            .signup-box{
+
+                width:90%;
+                padding:30px 20px;
+            }
+
+            .signup-box h1{
+
+                font-size:30px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- VIDEO -->
+
+    <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="video-bg"
+    >
+
+        <source
+            src="{{ url_for('static', filename='videos/house.mp4') }}"
+            type="video/mp4"
+        >
+
+    </video>
+
+    <!-- OVERLAY -->
+
+    <div class="overlay"></div>
+
+    <!-- SIGNUP FORM -->
+
+    <div class="signup-box">
+
+        <h1>
+
+            Create Account
+
+        </h1>
+
+        <form method="POST">
+
+            <!-- FIRST NAME -->
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="first_name"
+                    placeholder="Enter First Name"
+                    required
+                >
+
+            </div>
+
+            <!-- LAST NAME -->
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="last_name"
+                    placeholder="Enter Last Name"
+                    required
+                >
+
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="input-group">
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter Email Address"
+                    required
+                >
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="input-group">
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    required
+                >
+
+            </div>
+
+            <!-- SIGNUP BUTTON -->
+
+            <button
+                type="submit"
+                class="signup-btn"
+            >
+
+                Signup
+
+            </button>
+
+        </form>
+
+        <!-- LOGIN LINK -->
+
+        <div class="bottom-text">
+
+            Already have an account?
+
+            <a href="/login">
+
+                Login
+
+            </a>
 
         </div>
 
     </div>
 
-</div>
+</body>
 
-{% endblock %}
+</html>
