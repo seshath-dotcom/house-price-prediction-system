@@ -18,6 +18,10 @@ from flask import flash
 
 from flask_mysqldb import MySQL
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from werkzeug.utils import secure_filename
 
 from werkzeug.security import (
@@ -40,10 +44,11 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 # =========================================
 # MYSQL CONFIGURATION
 # =========================================
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'house_prediction_db'
+app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST')
+app.config['MYSQL_USER'] = os.getenv('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE')
+app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT'))
 
 mysql = MySQL(app)
 
