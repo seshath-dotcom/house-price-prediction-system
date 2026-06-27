@@ -32,6 +32,7 @@ from werkzeug.security import (
 
 
 
+app = Flask(__name__)
 # =========================================
 # SECRET KEY
 # =========================================
@@ -75,7 +76,6 @@ mysql = MySQL(app)
 
 
 
-app = Flask(__name__)
 
 # Gmail SMTP Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
