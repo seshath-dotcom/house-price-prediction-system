@@ -284,7 +284,12 @@ def login():
         SMART PROP AI
         """
 
-            mail.send(msg)
+            try:
+                mail.send(msg)
+                print("Mail sent successfully")
+            except Exception as e:
+                print("MAIL ERROR:", repr(e))
+                return f"Mail Error: {e}"
 
             return render_template(
                 'login.html',
