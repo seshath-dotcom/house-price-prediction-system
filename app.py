@@ -8,6 +8,7 @@ from flask import (
     redirect,
     session
 )
+
 import random
 
 from flask_mail import Mail, Message
@@ -52,24 +53,40 @@ app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT'))
 
 mysql = MySQL(app)
 
+
+
 #mail Config
 
 # =========================================
 # MAIL CONFIGURATION
 # =========================================
 
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+
+# app.config['MAIL_PORT'] = 587
+
+# app.config['MAIL_USE_TLS'] = True
+
+# app.config['MAIL_USERNAME'] = 'seshathrisesha5@gmail.com'
+
+# app.config['MAIL_PASSWORD'] = 'jepe qasp keyy nqrz'
+
+# mail = Mail(app)
+
+
+
+app = Flask(__name__)
+
+# Gmail SMTP Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-
 app.config['MAIL_PORT'] = 587
-
 app.config['MAIL_USE_TLS'] = True
-
+app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'seshathrisesha5@gmail.com'
-
 app.config['MAIL_PASSWORD'] = 'jepe qasp keyy nqrz'
+app.config['MAIL_DEFAULT_SENDER'] = 'seshathrisesha5@gmail.com'
 
 mail = Mail(app)
-
 # =========================================
 # LOAD AI MODEL
 # =========================================
