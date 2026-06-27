@@ -1,6 +1,6 @@
 import os
 import joblib
-
+import smtplib
 from flask import (
     Flask,
     render_template,
@@ -149,6 +149,20 @@ def signup():
 # =========================================
 # LOGIN
 # =========================================
+
+@app.route("/smtp-test")
+def smtp_test():
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=20)
+        server.starttls()
+        server.login(
+            os.getenv("MAIL_USERNAME"),
+            os.getenv("MAIL_PASSWORD")
+        )
+        server.quit()
+        return "SMTP OK"
+    except Exception as e:
+        return str(e)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
